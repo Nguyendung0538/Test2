@@ -21,6 +21,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Employee Activities -->
+        <activity
+            android:name=".EmployeeDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AttendanceHistoryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SalaryDetailActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

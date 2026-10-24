@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#FAFAFA">
+
+    <TextView
+        android:id="@+id/tvWelcomeEmployee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Xin chào, Nhân viên"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Khu vực Điểm danh -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnCheckIn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Check-In"
+            android:padding="16dp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnCheckOut"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Check-Out"
+            android:padding="16dp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnViewHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Xem Lịch Sử Điểm Danh"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnViewSalary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Xem Chi Tiết Lương"
+        android:padding="16dp"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnLogoutEmployee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đăng Xuất"
+        android:textColor="#D32F2F"
+        style="?android:attr/borderlessButtonStyle"/>
+</LinearLayout>
