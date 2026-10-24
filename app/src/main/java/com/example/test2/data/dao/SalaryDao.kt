@@ -4,12 +4,17 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.test2.data.entity.Salary
+import com.example.test2.data.entity.SalaryWithEmployee
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SalaryDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrReplace(salary: Salary): Long
+
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(salary: Salary): Long
 
@@ -24,6 +29,10 @@ interface SalaryDao {
 
     @Query("SELECT * FROM Salary WHERE month = :month AND year = :year ORDER BY employeeId")
     fun observeForMonth(month: Int, year: Int): Flow<List<Salary>>
+
+    @Transaction
+    @Query("SELECT * FROM Salary WHERE month = :month AND year = :year ORDER BY id DESC")
+    fun observeSalariesWithEmployee(month: Int, year: Int): Flow<List<SalaryWithEmployee>>
 
     @Query("SELECT * FROM Salary WHERE employeeId = :employeeId AND month = :month AND year = :year LIMIT 1")
     fun observeOne(employeeId: Int, month: Int, year: Int): Flow<Salary?>

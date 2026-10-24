@@ -45,4 +45,19 @@
     <!-- Dialog xác nhận xóa -->
     <string name="dialog_delete_employee_title">Xác nhận xóa nhân viên</string>
     <string name="dialog_delete_employee_msg">Hành động này sẽ xóa toàn bộ dữ liệu chấm công và bảng lương liên quan đến nhân viên này. Bạn có chắc chắn muốn xóa?</string>
+
+    <!-- Phân hệ Quản lý Bảng lương Admin -->
+    <string name="title_salary_management">Quản lý Bảng lương</string>
+    <string name="label_month">Tháng</string>
+    <string name="label_year">Năm</string>
+    <string name="btn_recalculate_all">Tính lại toàn bộ</string>
+    <string name="label_total_payroll">Tổng quỹ lương</string>
+    <string name="label_total_regular_hours">Giờ làm chuẩn</string>
+    <string name="label_total_ot_hours">Giờ tăng ca (OT)</string>
+    <string name="status_pending">CHỜ THANH TOÁN</string>
+    <string name="status_paid">ĐÃ THANH TOÁN</string>
+    <string name="btn_mark_paid">Đánh dấu đã thanh toán (PAID)</string>
+    <string name="empty_salary_list">Chưa phát sinh bảng lương cho tháng này</string>
+    <string name="dialog_mark_paid_title">Xác nhận chốt thanh toán</string>
+    <string name="dialog_mark_paid_msg">Sau khi đánh dấu đã thanh toán (PAID), bản ghi lương này sẽ bị khóa và không thể chỉnh sửa hay tính toán lại. Bạn có chắc chắn?</string>
 </resources>
