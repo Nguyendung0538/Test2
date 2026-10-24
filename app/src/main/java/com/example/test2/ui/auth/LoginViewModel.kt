@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.test2.data.repository.AuthRepository
 import com.example.test2.data.repository.AuthUser
-import com.example.test2.util.AppResult
+import com.example.test2.utils.AppResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

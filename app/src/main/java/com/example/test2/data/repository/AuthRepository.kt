@@ -3,9 +3,8 @@ package com.example.test2.data.repository
 import androidx.room.withTransaction
 import com.example.test2.data.local.AppDatabase
 import com.example.test2.data.entity.Account
-import com.example.test2.data.entity.Employee
-import com.example.test2.util.AppResult
-import com.example.test2.util.HashUtils
+import com.example.test2.utils.AppResult
+import com.example.test2.utils.HashUtils
 
 data class AuthUser(
     val accountId: Int,

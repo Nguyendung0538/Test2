@@ -3,12 +3,12 @@ package com.example.test2.data.local
 import androidx.room.withTransaction
 import com.example.test2.data.entity.Account
 import com.example.test2.data.entity.Employee
-import com.example.test2.data.entity.Salary
 import com.example.test2.data.entity.WorkLog
-import com.example.test2.util.DateTimeUtils
-import com.example.test2.util.HashUtils
+import com.example.test2.utils.DateTimeUtils
+import com.example.test2.utils.HashUtils
 import java.time.LocalDate
 import kotlinx.coroutines.runBlocking
+import java.time.ZoneId
 
 object DatabaseSeeder {
     /** Called only for a newly-created database. Inserts demo users and current-month logs. */
@@ -47,7 +47,7 @@ object DatabaseSeeder {
                     }.takeLast(5)
                     days.forEachIndexed { index, day ->
                         val date = LocalDate.of(today.year, today.monthValue, day)
-                        val start = date.atTime(9, 0).atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
+                        val start = date.atTime(9, 0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                         val hours = if (index == 0) 9.0 else 8.0
                         val end = start + (hours * 3_600_000L).toLong()
                         workLogDao.insert(

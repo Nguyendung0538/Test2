@@ -1,4 +1,4 @@
-package com.example.test2.util
+package com.example.test2.utils
 
 import java.security.MessageDigest
 

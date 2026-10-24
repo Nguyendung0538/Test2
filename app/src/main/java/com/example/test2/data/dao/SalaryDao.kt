@@ -1,7 +1,5 @@
 package com.example.test2.data.dao
 
-package com.example.test2.data.dao
-
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
