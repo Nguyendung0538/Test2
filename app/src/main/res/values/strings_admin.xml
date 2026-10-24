@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Màn hình Danh sách Nhân viên -->
+    <string name="title_employee_list">Danh sách Nhân viên</string>
+    <string name="hint_search_employee">Tìm kiếm theo tên, mã NV, email&#8230;</string>
+    <string name="empty_employee_list">Chưa có nhân viên nào trong hệ thống</string>
+    <string name="empty_employee_search">Không tìm thấy nhân viên phù hợp</string>
+    <string name="cd_add_employee">Thêm nhân viên mới</string>
+    <string name="cd_employee_avatar">Ảnh đại diện nhân viên</string>
+
+    <!-- Màn hình Form Thêm / Sửa Nhân viên -->
+    <string name="title_add_employee">Thêm Nhân viên Mới</string>
+    <string name="title_edit_employee">Chỉnh sửa Nhân viên</string>
+    <string name="label_employee_code">Mã nhân viên *</string>
+    <string name="hint_employee_code">VD: NV001</string>
+    <string name="label_username">Tên đăng nhập *</string>
+    <string name="hint_username">Tối thiểu 6 ký tự</string>
+    <string name="label_password">Mật khẩu *</string>
+    <string name="hint_password">Tối thiểu 6 ký tự</string>
+    <string name="label_fullname">Họ và tên *</string>
+    <string name="hint_fullname">VD: Nguyễn Văn A</string>
+    <string name="label_email">Email *</string>
+    <string name="hint_email">VD: nguyenvana@gmail.com</string>
+    <string name="label_phone">Số điện thoại *</string>
+    <string name="hint_phone">VD: 0912345678</string>
+    <string name="label_hourly_rate">Mức lương theo giờ (VNĐ/h) *</string>
+    <string name="hint_hourly_rate">VD: 50000</string>
+
+    <!-- Thao tác nút bấm -->
+    <string name="btn_save">Lưu</string>
+    <string name="btn_cancel">Hủy</string>
+    <string name="btn_edit">Sửa</string>
+    <string name="btn_delete">Xóa</string>
+    <string name="btn_close">Đóng</string>
+
+    <!-- Thông báo Lỗi & Validation -->
+    <string name="error_required_field">Trường này không được để trống</string>
+    <string name="error_code_exists">Mã nhân viên đã tồn tại trên hệ thống</string>
+    <string name="error_username_exists">Tên đăng nhập đã tồn tại</string>
+    <string name="error_invalid_email">Email không hợp lệ</string>
+    <string name="error_invalid_phone">Số điện thoại phải gồm 10 chữ số bắt đầu bằng 0</string>
+    <string name="error_invalid_hourly_rate">Mức lương theo giờ phải lớn hơn 0</string>
+    <string name="error_short_password">Mật khẩu phải chứa ít nhất 6 ký tự</string>
+
+    <!-- Dialog xác nhận xóa -->
+    <string name="dialog_delete_employee_title">Xác nhận xóa nhân viên</string>
+    <string name="dialog_delete_employee_msg">Hành động này sẽ xóa toàn bộ dữ liệu chấm công và bảng lương liên quan đến nhân viên này. Bạn có chắc chắn muốn xóa?</string>
+
+    <!-- Phân hệ Quản lý Bảng lương Admin -->
+    <string name="title_salary_management">Quản lý Bảng lương</string>
+    <string name="label_month">Tháng</string>
+    <string name="label_year">Năm</string>
+    <string name="btn_recalculate_all">Tính lại toàn bộ</string>
+    <string name="label_total_payroll">Tổng quỹ lương</string>
+    <string name="label_total_regular_hours">Giờ làm chuẩn</string>
+    <string name="label_total_ot_hours">Giờ tăng ca (OT)</string>
+    <string name="status_pending">CHỜ THANH TOÁN</string>
+    <string name="status_paid">ĐÃ THANH TOÁN</string>
+    <string name="btn_mark_paid">Đánh dấu đã thanh toán (PAID)</string>
+    <string name="empty_salary_list">Chưa phát sinh bảng lương cho tháng này</string>
+    <string name="dialog_mark_paid_title">Xác nhận chốt thanh toán</string>
+    <string name="dialog_mark_paid_msg">Sau khi đánh dấu đã thanh toán (PAID), bản ghi lương này sẽ bị khóa và không thể chỉnh sửa hay tính toán lại. Bạn có chắc chắn?</string>
+</resources>

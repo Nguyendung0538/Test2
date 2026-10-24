@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textStyle="bold"
+            tools:text="Chi tiết Bảng lương Tháng 3/2025" />
+
+        <TextView
+            android:id="@+id/tvEmployeeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="#1A73E8"
+            tools:text="Nhân viên: Nguyễn Văn A (NV001)" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="#E0E0E0" />
+
+        <!-- Chi tiết số giờ & số tiền -->
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
+
+            <TableRow android:paddingVertical="6dp">
+                <TextView
+                    android:text="Mức lương/giờ:"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:id="@+id/tvHourlyRateDetail"
+                    android:gravity="end"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textStyle="bold"
+                    tools:text="50.000 VNĐ" />
+            </TableRow>
+
+            <TableRow android:paddingVertical="6dp">
+                <TextView
+                    android:text="Giờ làm chuẩn (max 8h/ngày):"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:id="@+id/tvRegularHoursDetail"
+                    android:gravity="end"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    tools:text="160.0 giờ" />
+            </TableRow>
+
+            <TableRow android:paddingVertical="6dp">
+                <TextView
+                    android:text="Lương giờ chuẩn:"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:id="@+id/tvRegularSalaryDetail"
+                    android:gravity="end"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    tools:text="8.000.000 VNĐ" />
+            </TableRow>
+
+            <TableRow android:paddingVertical="6dp">
+                <TextView
+                    android:text="Giờ tăng ca (OT x1.5):"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:id="@+id/tvOtHoursDetail"
+                    android:gravity="end"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    tools:text="10.0 giờ" />
+            </TableRow>
+
+            <TableRow android:paddingVertical="6dp">
+                <TextView
+                    android:text="Tiền lương OT (x1.5):"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:id="@+id/tvOtSalaryDetail"
+                    android:gravity="end"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    tools:text="750.000 VNĐ" />
+            </TableRow>
+
+            <TableRow android:paddingVertical="8dp">
+                <TextView
+                    android:text="TỔNG CỘNG THỰC NHẬN:"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvTotalSalaryDetail"
+                    android:gravity="end"
+                    android:textAppearance="?attr/textAppearanceTitleLarge"
+                    android:textColor="#2E7D32"
+                    android:textStyle="bold"
+                    tools:text="8.750.000 VNĐ" />
+            </TableRow>
+
+            <TableRow android:paddingVertical="6dp">
+                <TextView
+                    android:text="Trạng thái thanh toán:"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:id="@+id/tvStatusDetail"
+                    android:gravity="end"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textStyle="bold"
+                    tools:text="CHỜ THANH TOÁN" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Nút thao tác -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMarkPaid"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#2E7D32"
+            android:text="@string/btn_mark_paid" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClose"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_close" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
