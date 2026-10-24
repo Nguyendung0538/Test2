@@ -25,7 +25,8 @@ object DatabaseSeeder {
             val demos = listOf(
                 Demo("NV001", "Nguyen Van An", "an@example.com", "0901234567", 50000.0, "employee1", "123456"),
                 Demo("NV002", "Tran Thi Binh", "binh@example.com", "0912345678", 55000.0, "employee2", "123456"),
-                Demo("NV003", "Le Van Cuong", "cuong@example.com", "0923456789", 60000.0, "employee3", "123456")
+                Demo("NV003", "Le Van Cuong", "cuong@example.com", "0923456789", 60000.0, "employee3", "123456"),
+                Demo("NV004", "Pham Thi Dung", "dung@example.com", "0934567890", 52000.0, "employee4", "123456")
             )
 
             demos.forEach { d ->
