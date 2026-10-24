@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
     private fun openHome(role: String) {
         val target = when (role) {
             "ADMIN" -> AdminMainActivity::class.java
-            "EMPLOYEE" -> EmployeeMainActivity::class.java
+            "EMPLOYEE" -> com.example.test2.EmployeeDashboardActivity::class.java
             else -> {
                 Toast.makeText(this, "Vai trò không hợp lệ.", Toast.LENGTH_LONG).show()
                 return

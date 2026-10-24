@@ -1,14 +1,19 @@
 package com.example.test2
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.test2.data.entity.WorkLog
 import com.example.test2.databinding.ActivityEmployeeDashboardBinding
 import com.example.test2.domain.WorkHoursCalculator
+import com.example.test2.ui.auth.LoginActivity
+import com.example.test2.utils.DateTimeUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -16,37 +21,41 @@ import java.util.Locale
 class EmployeeDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEmployeeDashboardBinding
-    private lateinit var prefs: SharedPreferences
 
     private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-    companion object {
-        private const val PREFS_NAME = "attendance_prefs"
-        private const val KEY_WORK_DATE = "work_date"
-        private const val KEY_CHECK_IN_TIME = "check_in_time"
-        private const val KEY_STATUS = "status"
+    private val app get() = application as PayrollApplication
+    private val database get() = app.container.database
+    private val sessionManager get() = app.container.sessionManager
 
-        const val STATUS_IDLE = "IDLE"
-        const val STATUS_IN_PROGRESS = "IN_PROGRESS"
-        const val STATUS_COMPLETED = "COMPLETED"
-    }
+    private var currentEmployeeId: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEmployeeDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        currentEmployeeId = sessionManager.employeeId() ?: 1
 
         setupUI()
         setupEvents()
-        syncTodayStatus()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        syncTodayStatusFromDb()
     }
 
     private fun setupUI() {
         val todayStr = SimpleDateFormat("EEEE, dd/MM/yyyy", Locale.forLanguageTag("vi-VN")).format(Date())
-        binding.tvWelcomeEmployee.text = "Xin chào, Nhân viên!\n$todayStr"
+
+        lifecycleScope.launch {
+            val employee = withContext(Dispatchers.IO) {
+                database.employeeDao().findById(currentEmployeeId)
+            }
+            val displayName = employee?.fullname ?: sessionManager.username() ?: "Nhân viên"
+            binding.tvWelcomeEmployee.text = "Xin chào, $displayName!\n$todayStr"
+        }
     }
 
     private fun setupEvents() {
@@ -78,7 +87,11 @@ class EmployeeDashboardActivity : AppCompatActivity() {
                 .setTitle("Đăng xuất")
                 .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
                 .setPositiveButton("Đồng ý") { _, _ ->
-                    Toast.makeText(this, "Đã đăng xuất!", Toast.LENGTH_SHORT).show()
+                    sessionManager.logout()
+                    val intent = Intent(this, LoginActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    startActivity(intent)
                     finish()
                 }
                 .setNegativeButton("Hủy", null)
@@ -86,30 +99,42 @@ class EmployeeDashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun syncTodayStatus() {
-        val today = dateFormat.format(Date())
-        val savedDate = prefs.getString(KEY_WORK_DATE, null)
-        val status = prefs.getString(KEY_STATUS, STATUS_IDLE) ?: STATUS_IDLE
+    private fun syncTodayStatusFromDb() {
+        val today = DateTimeUtils.today()
 
-        // Nếu qua ngày mới, reset trạng thái
-        if (savedDate != today) {
-            updateButtonState(STATUS_IDLE)
-            return
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                // Tự động quét và đánh dấu INCOMPLETE cho các log cũ chưa checkout
+                val oldOpenLogs = database.workLogDao().findOldOpenLogs(today)
+                oldOpenLogs.forEach { log ->
+                    database.workLogDao().update(log.copy(status = "INCOMPLETE", totalHours = 0.0))
+                }
+            }
+
+            val todayLog = withContext(Dispatchers.IO) {
+                database.workLogDao().findForDate(currentEmployeeId, today)
+            }
+
+            when {
+                todayLog == null -> updateButtonState("IDLE")
+                todayLog.status == "IN_PROGRESS" -> updateButtonState("IN_PROGRESS")
+                todayLog.status == "COMPLETED" -> updateButtonState("COMPLETED")
+                else -> updateButtonState("IDLE")
+            }
         }
-
-        updateButtonState(status)
     }
 
     private fun updateButtonState(status: String) {
         when (status) {
-            STATUS_IN_PROGRESS -> {
+            "IN_PROGRESS" -> {
                 binding.btnCheckIn.isEnabled = false
                 binding.btnCheckIn.alpha = 0.5f
 
                 binding.btnCheckOut.isEnabled = true
                 binding.btnCheckOut.alpha = 1.0f
+                binding.btnCheckOut.text = "Check-Out"
             }
-            STATUS_COMPLETED -> {
+            "COMPLETED" -> {
                 binding.btnCheckIn.isEnabled = false
                 binding.btnCheckIn.alpha = 0.5f
 
@@ -117,65 +142,100 @@ class EmployeeDashboardActivity : AppCompatActivity() {
                 binding.btnCheckOut.alpha = 0.5f
                 binding.btnCheckOut.text = "Đã Check-Out Hôm Nay"
             }
-            else -> { // STATUS_IDLE
+            else -> { // IDLE
                 binding.btnCheckIn.isEnabled = true
                 binding.btnCheckIn.alpha = 1.0f
 
                 binding.btnCheckOut.isEnabled = false
                 binding.btnCheckOut.alpha = 0.5f
+                binding.btnCheckOut.text = "Check-Out"
             }
         }
     }
 
     private fun handleCheckIn() {
         val now = System.currentTimeMillis()
-        val today = dateFormat.format(Date(now))
+        val today = DateTimeUtils.today()
         val timeStr = timeFormat.format(Date(now))
 
-        prefs.edit()
-            .putString(KEY_WORK_DATE, today)
-            .putLong(KEY_CHECK_IN_TIME, now)
-            .putString(KEY_STATUS, STATUS_IN_PROGRESS)
-            .apply()
+        lifecycleScope.launch {
+            val existing = withContext(Dispatchers.IO) {
+                database.workLogDao().findForDate(currentEmployeeId, today)
+            }
 
-        updateButtonState(STATUS_IN_PROGRESS)
+            if (existing != null) {
+                Toast.makeText(this@EmployeeDashboardActivity, "⚠️ Bạn đã check-in ngày hôm nay rồi!", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
 
-        Toast.makeText(this, "✅ Check-In thành công lúc $timeStr", Toast.LENGTH_LONG).show()
+            val newLog = WorkLog(
+                employeeId = currentEmployeeId,
+                workDate = today,
+                checkInTime = now,
+                checkOutTime = null,
+                totalHours = 0.0,
+                status = "IN_PROGRESS"
+            )
+
+            withContext(Dispatchers.IO) {
+                database.workLogDao().insert(newLog)
+            }
+
+            updateButtonState("IN_PROGRESS")
+            Toast.makeText(this@EmployeeDashboardActivity, "✅ Check-In thành công lúc $timeStr", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun handleCheckOut() {
-        val checkInTime = prefs.getLong(KEY_CHECK_IN_TIME, 0L)
         val now = System.currentTimeMillis()
+        val today = DateTimeUtils.today()
+        val timeStr = timeFormat.format(Date(now))
 
-        if (checkInTime == 0L || now <= checkInTime) {
-            Toast.makeText(this, "⚠️ Thời gian không hợp lệ!", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        try {
-            val result = WorkHoursCalculator.calculate(checkInTime, now)
-            val timeStr = timeFormat.format(Date(now))
-
-            prefs.edit()
-                .putString(KEY_STATUS, STATUS_COMPLETED)
-                .apply()
-
-            updateButtonState(STATUS_COMPLETED)
-
-            val message = if (result.overtimeHours > 0) {
-                "✅ Check-Out lúc $timeStr\nTổng giờ: ${result.totalHours}h (Thường: ${result.regularHours}h, OT: ${result.overtimeHours}h)"
-            } else {
-                "✅ Check-Out lúc $timeStr\nTổng giờ làm: ${result.totalHours}h"
+        lifecycleScope.launch {
+            val todayLog = withContext(Dispatchers.IO) {
+                database.workLogDao().findForDate(currentEmployeeId, today)
             }
 
-            AlertDialog.Builder(this)
-                .setTitle("Chấm Công Hoàn Tất")
-                .setMessage(message)
-                .setPositiveButton("OK", null)
-                .show()
+            if (todayLog == null) {
+                Toast.makeText(this@EmployeeDashboardActivity, "⚠️ Chưa có bản ghi Check-In hôm nay!", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
 
-        } catch (e: Exception) {
-            Toast.makeText(this, "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+            if (todayLog.status == "COMPLETED") {
+                Toast.makeText(this@EmployeeDashboardActivity, "⚠️ Hôm nay bạn đã check-out rồi!", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            try {
+                val result = WorkHoursCalculator.calculate(todayLog.checkInTime, now)
+
+                val updatedLog = todayLog.copy(
+                    checkOutTime = now,
+                    totalHours = result.totalHours,
+                    status = "COMPLETED"
+                )
+
+                withContext(Dispatchers.IO) {
+                    database.workLogDao().update(updatedLog)
+                }
+
+                updateButtonState("COMPLETED")
+
+                val message = if (result.overtimeHours > 0) {
+                    "✅ Check-Out lúc $timeStr\nTổng giờ: ${result.totalHours}h (Thường: ${result.regularHours}h, OT: ${result.overtimeHours}h)"
+                } else {
+                    "✅ Check-Out lúc $timeStr\nTổng giờ làm: ${result.totalHours}h"
+                }
+
+                AlertDialog.Builder(this@EmployeeDashboardActivity)
+                    .setTitle("Chấm Công Hoàn Tất")
+                    .setMessage(message)
+                    .setPositiveButton("OK", null)
+                    .show()
+
+            } catch (e: Exception) {
+                Toast.makeText(this@EmployeeDashboardActivity, "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
