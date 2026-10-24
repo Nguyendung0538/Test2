@@ -14,7 +14,7 @@ class SplashActivity : AppCompatActivity() {
         val target = if (session.shouldRememberLogin()) {
             when (session.role()) {
                 "ADMIN" -> AdminMainActivity::class.java
-                "EMPLOYEE" -> EmployeeMainActivity::class.java
+                "EMPLOYEE" -> com.example.test2.EmployeeDashboardActivity::class.java
                 else -> LoginActivity::class.java
             }
         } else {
