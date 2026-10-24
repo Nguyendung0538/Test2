@@ -1,7 +1,7 @@
 /**
  * Fragment hiển thị danh sách toàn bộ nhân viên dành cho Quản trị viên (Admin).
  * Hỗ trợ tìm kiếm realtime, hiển thị trạng thái danh sách rỗng (Empty State)
- * và chuyển sang màn hình Thêm mới / Chỉnh sửa nhân viên.
+ * và chuyển sang màn hình Chi tiết hoặc Thêm mới nhân viên.
  */
 package com.example.test2.ui.admin.employee
 
@@ -52,8 +52,8 @@ class EmployeeListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = EmployeeAdapter { employee ->
-            // Bấm vào từng dòng nhân viên -> mở màn hình Form ở chế độ Chỉnh sửa
-            openEmployeeForm(employee.id)
+            // Bấm vào từng dòng nhân viên -> Mở màn hình Chi tiết Nhân viên
+            openEmployeeDetail(employee.id)
         }
         binding.rvEmployees.adapter = adapter
     }
@@ -89,6 +89,14 @@ class EmployeeListFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun openEmployeeDetail(employeeId: Int) {
+        val fragment = EmployeeDetailFragment.newInstance(employeeId)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun openEmployeeForm(employeeId: Int?) {

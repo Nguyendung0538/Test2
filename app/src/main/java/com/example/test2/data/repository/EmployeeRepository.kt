@@ -39,6 +39,11 @@ class EmployeeRepository(private val database: AppDatabase) {
         }
     }
 
+    /** Lấy thông tin tài khoản theo accountId. */
+    suspend fun getAccountById(accountId: Int): Account? {
+        return accountDao.findById(accountId)
+    }
+
     /** Kiểm tra mã nhân viên đã tồn tại trong CSDL chưa. */
     suspend fun isCodeExists(code: String): Boolean {
         return employeeDao.findByCode(code.trim()) != null
